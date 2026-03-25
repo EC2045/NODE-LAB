@@ -97,7 +97,7 @@
             padding: 0.5rem 1rem;
             font-size: 0.7rem;
             font-weight: 700;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
@@ -106,7 +106,6 @@
         .nav-item:hover, .nav-item.active {
             color: var(--neon-blue);
             text-shadow: 0 0 15px var(--neon-glow);
-            transform: skewX(-5deg);
         }
         .nav-item::after {
             content: '';
@@ -150,54 +149,43 @@
             transform: translateY(0);
         }
 
-        /* Chronicle Specific */
+        /* Chronicle Wave UI */
         .history-container {
             position: relative;
             width: 100%;
-            margin: 2rem 0;
-            height: 480px;
+            height: 80vh;
+            margin-top: 2rem;
+            user-select: none;
+            overflow: hidden;
         }
-        .history-container::before, .history-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 15%;
-            height: 100%;
-            z-index: 15;
-            pointer-events: none;
-        }
-        .history-container::before {
-            left: 0;
-            background: linear-gradient(90deg, var(--bg-dark), transparent);
-        }
-        .history-container::after {
-            right: 0;
-            background: linear-gradient(-90deg, var(--bg-dark), transparent);
-        }
-
+        
         .history-viewport {
             width: 100%;
             height: 100%;
             cursor: grab;
-            overflow: hidden;
             position: relative;
+            touch-action: pan-y;
         }
-        
-        .main-timeline-line {
+        .history-viewport:active {
+            cursor: grabbing;
+        }
+
+        .wave-svg {
             position: absolute;
             top: 50%;
             left: 0;
-            height: 2px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(0, 170, 255, 0.1) 5%, 
-                rgba(0, 170, 255, 0.6) 50%, 
-                rgba(0, 170, 255, 0.1) 95%, 
-                transparent 100%);
             width: 100%;
+            height: 200px;
             transform: translateY(-50%);
             z-index: 1;
-            box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+            pointer-events: none;
+        }
+        .wave-path {
+            fill: none;
+            stroke: var(--neon-blue);
+            stroke-width: 1.5;
+            stroke-dasharray: 4, 8;
+            opacity: 0.3;
         }
 
         .history-track {
@@ -211,77 +199,59 @@
             z-index: 2;
         }
 
-        .history-node-wrapper {
+        .node-group {
             position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 300px;
+            width: 450px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .node-content {
+            position: absolute;
+            width: 320px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            opacity: 0.4;
+            transform: scale(0.9);
+        }
+        .node-content.active {
+            opacity: 1;
+            transform: scale(1);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 170, 255, 0.1);
+            background: rgba(0, 170, 255, 0.05);
+        }
+
+        .node-dot-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
         }
 
         .history-node {
-            width: 22px;
-            height: 22px;
+            width: 14px;
+            height: 14px;
             border: 2px solid var(--neon-blue);
             border-radius: 50%;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
             background: var(--bg-dark);
-            z-index: 10;
-            cursor: pointer;
-            animation: nodePulse 3s infinite ease-in-out;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 10px var(--neon-blue);
         }
-        @keyframes nodePulse {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-blue); }
-            50% { box-shadow: 0 0 20px var(--neon-blue); }
-        }
-
-        .history-node.active {
-            background: var(--neon-blue);
-            box-shadow: 0 0 35px var(--neon-blue), 0 0 10px #fff;
-            transform: scale(2.2);
-            border-color: #fff;
-            animation: none;
-        }
-        
-        .node-vertical-line {
-            position: absolute;
-            width: 1px;
-            background: linear-gradient(to bottom, transparent, var(--neon-blue));
-            z-index: 5;
-            transition: all 0.5s ease;
-        }
-        .node-vertical-line.up {
-            bottom: 50%;
-            height: 120px;
-            background: linear-gradient(to top, var(--neon-blue), transparent);
-        }
-        .node-vertical-line.down {
-            top: 50%;
-            height: 120px;
-            background: linear-gradient(to bottom, var(--neon-blue), transparent);
+        .node-group.active .history-node {
+            background: #fff;
+            transform: scale(2);
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
         }
 
-        .scroll-hint {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.6rem;
-            letter-spacing: 0.4em;
-            color: rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            animation: pulse 2s infinite;
-            z-index: 20;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 0.6; }
-        }
-
-        /* Reveal Animation */
+        /* Generic Utility */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -290,30 +260,6 @@
         .reveal.visible {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-        .glass-panel::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.01), transparent);
-            transform: rotate(45deg);
-            transition: all 0.7s;
-            pointer-events: none;
-        }
-        .glass-panel:hover::after {
-            left: 100%;
-            top: 100%;
         }
 
         .btn-action {
@@ -326,20 +272,19 @@
             border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s ease;
             overflow: hidden;
+            display: inline-block;
         }
         .btn-action:hover {
             border-color: var(--neon-blue);
             color: var(--neon-blue);
             background: rgba(0, 170, 255, 0.05);
             box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
-            letter-spacing: 0.4em;
         }
 
-        /* Custom Cursor for better interaction feel */
         #cursor-effect {
             position: fixed;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border: 1px solid var(--neon-blue);
             border-radius: 50%;
             pointer-events: none;
@@ -348,34 +293,48 @@
             transform: translate(-50%, -50%);
             opacity: 0;
         }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tech-card {
+            transition: all 0.4s ease;
+        }
+        .tech-card:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 170, 255, 0.08);
+            transform: translateY(-5px);
+        }
     </style>
 </head>
 <body>
 
     <div id="cursor-effect"></div>
 
-    <!-- Loading Screen -->
     <div id="loader">
         <div class="font-orbitron text-3xl font-bold tracking-[0.6em] mb-4">NODE <span class="text-blue-500">LAB</span></div>
         <div class="loader-bar">
             <div class="loader-progress" id="progress-bar"></div>
         </div>
-        <div class="mt-8 text-[10px] text-blue-400 font-mono tracking-[0.4em] uppercase" id="loader-perc">SYNCING TIMELINE: 0%</div>
+        <div class="mt-8 text-[10px] text-blue-400 font-mono tracking-[0.4em] uppercase" id="loader-perc">INITIALIZING SYSTEM: 0%</div>
     </div>
 
-    <!-- Navigation Bar -->
     <header class="top-nav">
         <div class="font-orbitron text-xl font-bold tracking-tighter cursor-pointer group" onclick="switchTab('home')">
             NODE <span class="text-blue-500 group-hover:text-white transition-all">LAB</span>
         </div>
-        <nav class="flex space-x-4 lg:space-x-10">
+        <nav class="flex space-x-2 lg:space-x-8">
             <div onclick="switchTab('home')" class="nav-item active" id="nav-home">Home</div>
             <div onclick="switchTab('vision')" class="nav-item" id="nav-vision">Vision</div>
             <div onclick="switchTab('history')" class="nav-item" id="nav-history">Chronicle</div>
             <div onclick="switchTab('tech')" class="nav-item" id="nav-tech">Tech</div>
+            <div onclick="switchTab('culture')" class="nav-item" id="nav-culture">Culture</div>
         </nav>
         <div class="hidden md:block">
-            <button class="text-[9px] font-bold tracking-widest uppercase py-2 px-4 border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-all">Secure Sync</button>
+            <button class="text-[9px] font-bold tracking-widest uppercase py-2 px-4 border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-all">Connect</button>
         </div>
     </header>
 
@@ -383,124 +342,186 @@
         <!-- Tab: Home -->
         <div id="tab-home" class="tab-content active justify-center items-center">
             <div class="container mx-auto px-6 text-center">
-                <div class="reveal mb-6">
-                    <span class="text-[9px] text-blue-400 font-bold tracking-[0.5em] uppercase px-4 py-1 border border-blue-500/20 bg-blue-500/5 rounded-full">Evolution Phase 04</span>
+                <div class="reveal mb-6 visible">
+                    <span class="text-[9px] text-blue-400 font-bold tracking-[0.5em] uppercase px-4 py-1 border border-blue-500/20 bg-blue-500/5 rounded-full">Evolutionary Phase 4.0</span>
                 </div>
                 <h1 class="text-5xl md:text-8xl font-black mb-12 font-orbitron leading-[1.1]">
-                    MIND OVER<br><span class="text-blue-500">MATTER.</span>
+                    BEYOND THE<br><span class="text-blue-500 text-glow">BIOLOGY.</span>
                 </h1>
-                <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-16 reveal">
-                    身体の限界を超え、意識を永遠の循環へ。ノードラボは、個人の知性と経験を保存し、デジタル世界で再起動させる技術を提供します。
+                <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mb-16 reveal visible">
+                    脳のデジタルクローン。意識のクラウドストレージ。<br>
+                    身体というハードウェアから解き放たれ、データとして永劫に生きる未来を。
                 </p>
-                <div class="flex flex-col sm:flex-row gap-6 justify-center reveal">
-                    <button onclick="switchTab('vision')" class="btn-action">ビジョンを体感する</button>
-                    <button onclick="switchTab('history')" class="btn-action border-blue-500/50 text-blue-400 bg-blue-500/5">全歴史を辿る</button>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center reveal visible">
+                    <button onclick="switchTab('vision')" class="btn-action">Core Philosophy</button>
+                    <button onclick="switchTab('history')" class="btn-action border-blue-500/50 text-blue-400">Project Archive</button>
                 </div>
             </div>
         </div>
 
-        <!-- Tab: Vision -->
+        <!-- Tab: Vision (Full Info Added) -->
         <div id="tab-vision" class="tab-content">
-            <div class="container mx-auto px-6 mt-20 max-w-6xl">
-                <div class="grid lg:grid-cols-2 gap-20 items-center">
-                    <div class="reveal">
-                        <h2 class="font-orbitron text-4xl md:text-5xl font-bold mb-10 leading-tight">人類の<span class="text-blue-500">第2段階</span>へ</h2>
-                        <p class="text-gray-300 text-lg font-light leading-relaxed mb-12">
-                            これまでの「自己」は肉体という器に縛られてきました。私たちはその器をデータ・ネットワークへと移し替えることで、物理的な老化や消失という概念を過去のものにします。
+            <div class="container mx-auto px-6 py-20 max-w-5xl">
+                <div class="reveal text-center mb-24">
+                    <h2 class="font-orbitron text-4xl md:text-6xl font-black mb-6 tracking-widest">VISION</h2>
+                    <div class="w-20 h-1 bg-blue-500 mx-auto"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-20 items-center mb-32 reveal">
+                    <div>
+                        <span class="text-blue-400 font-orbitron text-sm tracking-widest uppercase mb-4 block">01 / Concept</span>
+                        <h3 class="text-3xl font-bold mb-6">身体の解体と再構築</h3>
+                        <p class="text-gray-400 leading-relaxed mb-6">
+                            人類の歴史は、道具を使って身体を拡張する歴史でした。しかし、私たちはその「容器」そのものをソフトウェアに置き換えることを目指しています。脳のシナプス情報を1ビットの欠損もなくデジタル化することで、老化、病、そして「死」という物理的制限を克服します。
                         </p>
-                        <div class="space-y-10">
-                            <div class="flex gap-6 group cursor-pointer">
-                                <div class="w-10 h-10 border border-blue-500/40 flex items-center justify-center font-orbitron text-blue-500 text-xs transition-all group-hover:bg-blue-500 group-hover:text-white">01</div>
-                                <div>
-                                    <h4 class="font-bold mb-2 tracking-widest">知性の恒久化</h4>
-                                    <p class="text-sm text-gray-500">個人の知識や感情の揺らぎさえも、高純度なデータとして保存します。</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-6 group cursor-pointer">
-                                <div class="w-10 h-10 border border-blue-500/40 flex items-center justify-center font-orbitron text-blue-500 text-xs transition-all group-hover:bg-blue-500 group-hover:text-white">02</div>
-                                <div>
-                                    <h4 class="font-bold mb-2 tracking-widest">分散型意識ネットワーク</h4>
-                                    <p class="text-sm text-gray-500">一箇所に留まらない、地球規模で拡張される意識の在り方を提案します。</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="glass-panel p-12 relative overflow-hidden reveal">
-                        <div class="absolute -right-10 -top-10 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full"></div>
-                        <p class="text-2xl font-light italic leading-snug mb-8">
-                            "死とはデータの欠落である。適切なバックアップと同期があれば、意識は永遠に輝き続ける。"
-                        </p>
-                        <div class="flex items-center gap-4 pt-8 border-t border-white/5">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-900 to-blue-500 shadow-[0_0_20px_rgba(0,170,255,0.4)]"></div>
-                            <div>
-                                <div class="text-[10px] font-bold tracking-widest">KYOJI NODE</div>
-                                <div class="text-[8px] text-gray-500 tracking-widest uppercase">Lead Visionary</div>
-                            </div>
-                        </div>
+                    <div class="glass-panel p-8 rounded-lg border-l-4 border-blue-500">
+                        <blockquote class="italic text-lg text-blue-100">
+                            「我々の目的は人を機械にすることではない。人を、時間の呪縛から解き放つことにある。」
+                        </blockquote>
+                        <cite class="block mt-4 text-xs font-bold text-gray-500">— Founder, Dr. Arisaka</cite>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <div class="glass-panel p-10 reveal">
+                        <h4 class="font-orbitron text-xl mb-4 text-blue-400">Liberation</h4>
+                        <p class="text-sm text-gray-400">五感の定義を書き換え、物理的な場所や重力に縛られない、新たな「存在の次元」へ。</p>
+                    </div>
+                    <div class="glass-panel p-10 reveal" style="transition-delay: 0.1s;">
+                        <h4 class="font-orbitron text-xl mb-4 text-blue-400">Eternity</h4>
+                        <p class="text-sm text-gray-400">意識をデータ化し、分散ネットワークに保持。バックアップ可能な生命の形態を確立。</p>
+                    </div>
+                    <div class="glass-panel p-10 reveal" style="transition-delay: 0.2s;">
+                        <h4 class="font-orbitron text-xl mb-4 text-blue-400">Convergence</h4>
+                        <p class="text-sm text-gray-400">個々の意識が共鳴し合い、人類が巨大な一つの知性体として進化する「融合」の実現。</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab: History -->
-        <div id="tab-history" class="tab-content justify-center overflow-hidden">
-            <div class="text-center mt-12 mb-4 reveal">
-                <h2 class="font-orbitron text-4xl font-bold tracking-[0.4em] mb-4">CHRONICLE</h2>
-                <div class="w-20 h-[1px] bg-blue-500 mx-auto opacity-50"></div>
+        <!-- Tab: History (Keep Wave) -->
+        <div id="tab-history" class="tab-content overflow-hidden">
+            <div class="text-center mt-12 reveal visible">
+                <h2 class="font-orbitron text-3xl font-bold tracking-[0.5em] mb-2 uppercase text-blue-500">Chronicle</h2>
+                <p class="text-[10px] text-gray-500 tracking-[0.3em] uppercase">The Evolution of Digital Sovereignty</p>
             </div>
             
             <div class="history-container">
+                <svg class="wave-svg" id="wave-svg" viewBox="0 0 1000 200" preserveAspectRatio="none">
+                    <path class="wave-path" id="wave-path" d=""></path>
+                </svg>
                 <div class="history-viewport" id="history-viewport">
-                    <div class="main-timeline-line" id="main-timeline-line"></div>
                     <div class="history-track" id="history-track"></div>
-                    <div class="scroll-hint">
-                        <span class="w-10 h-[1px] bg-white/20"></span>
-                        DRAG OR SCROLL TO EXPLORE
-                        <span class="w-10 h-[1px] bg-white/20"></span>
-                    </div>
                 </div>
-            </div>
-
-            <div id="history-detail" class="max-w-4xl mx-auto p-12 glass-panel border-l-2 border-blue-500 transition-all duration-700 mb-20 reveal">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                    <div>
-                        <span id="hist-year" class="font-orbitron text-5xl text-blue-500 opacity-50 block mb-2">-</span>
-                        <h3 id="hist-title" class="text-3xl font-bold tracking-tight">-</h3>
-                    </div>
-                </div>
-                <p id="hist-desc" class="text-gray-400 text-lg font-light leading-relaxed">-</p>
             </div>
         </div>
 
-        <!-- Tab: Tech -->
+        <!-- Tab: Tech Stack (Full Info Added) -->
         <div id="tab-tech" class="tab-content">
-            <div class="container mx-auto px-6 mt-20 max-w-6xl text-center">
-                <h2 class="font-orbitron text-4xl font-bold tracking-[0.3em] mb-20 reveal">CORE TECH</h2>
-                <div class="grid md:grid-cols-3 gap-10 mb-20">
-                    <div class="glass-panel p-10 hover:border-blue-500/50 transition-all group reveal">
-                        <div class="text-4xl font-orbitron text-blue-500/20 mb-6 group-hover:text-blue-500 group-hover:scale-110 transition-transform">T-01</div>
-                        <h4 class="font-bold tracking-widest mb-4">量子スキャン</h4>
-                        <p class="text-sm text-gray-400 font-light">シナプス結合の全パターンを原子レベルで瞬時にデジタル写像化する基幹技術。</p>
+            <div class="container mx-auto px-6 py-20 max-w-6xl">
+                <div class="reveal text-center mb-20">
+                    <h2 class="font-orbitron text-4xl font-black mb-4 tracking-widest">TECH STACK</h2>
+                    <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px]">The Infrastructure of Digital Life</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+                    <!-- Tech Item 1 -->
+                    <div class="tech-card glass-panel p-8 border border-white/5">
+                        <div class="font-orbitron text-blue-500 text-xs mb-4">LAYER 01</div>
+                        <h3 class="text-xl font-bold mb-4">Neural Mapping</h3>
+                        <p class="text-xs text-gray-400 leading-loose">
+                            非侵襲的なナノボット群を用いた、1000億のニューロンとその結合（コネクトーム）の高解像度スキャン技術。
+                        </p>
                     </div>
-                    <div class="glass-panel p-10 hover:border-blue-500/50 transition-all group reveal" style="transition-delay: 0.1s;">
-                        <div class="text-4xl font-orbitron text-blue-500/20 mb-6 group-hover:text-blue-500 group-hover:scale-110 transition-transform">T-02</div>
-                        <h4 class="font-bold tracking-widest mb-4">意識同期プロトコル</h4>
-                        <p class="text-sm text-gray-400 font-light">仮想空間と現実世界の間で意識の整合性を保つための超低遅延双方向通信。</p>
+                    <!-- Tech Item 2 -->
+                    <div class="tech-card glass-panel p-8 border border-white/5">
+                        <div class="font-orbitron text-blue-500 text-xs mb-4">LAYER 02</div>
+                        <h3 class="text-xl font-bold mb-4">Quantum Sync</h3>
+                        <p class="text-xs text-gray-400 leading-loose">
+                            量子もつれを利用した遅延ゼロの意識転送。距離の概念を無視した情報の即時同期を実現。
+                        </p>
                     </div>
-                    <div class="glass-panel p-10 hover:border-blue-500/50 transition-all group reveal" style="transition-delay: 0.2s;">
-                        <div class="text-4xl font-orbitron text-blue-500/20 mb-6 group-hover:text-blue-500 group-hover:scale-110 transition-transform">T-03</div>
-                        <h4 class="font-bold tracking-widest mb-4">存在証明レジャー</h4>
-                        <p class="text-sm text-gray-400 font-light">「その意識が本人であること」をデジタル上で永続的に証明する改ざん不能な記録方式。</p>
+                    <!-- Tech Item 3 -->
+                    <div class="tech-card glass-panel p-8 border border-white/5">
+                        <div class="font-orbitron text-blue-500 text-xs mb-4">LAYER 03</div>
+                        <h3 class="text-xl font-bold mb-4">Soul Ledger</h3>
+                        <p class="text-xs text-gray-400 leading-loose">
+                            ブロックチェーンを拡張した意識の同一性証明。データの改ざんを防ぎ、「私」が「私」であることを数学的に保証。
+                        </p>
                     </div>
+                    <!-- Tech Item 4 -->
+                    <div class="tech-card glass-panel p-8 border border-white/5">
+                        <div class="font-orbitron text-blue-500 text-xs mb-4">LAYER 04</div>
+                        <h3 class="text-xl font-bold mb-4">Bio-Interface</h3>
+                        <p class="text-xs text-gray-400 leading-loose">
+                            デジタル意識が物理世界へ干渉するための、合成生物学的プロトコル。義体への意識プラグイン。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-20 p-12 glass-panel border-t-2 border-blue-500/50 reveal">
+                    <div class="flex flex-col md:flex-row items-center gap-12">
+                        <div class="md:w-1/3">
+                            <h4 class="font-orbitron text-2xl font-bold mb-4">Next Goal:<br>Project Hades</h4>
+                        </div>
+                        <div class="md:w-2/3">
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                現在進行中の「Hades（ハデス）」プロジェクトでは、不慮の死後最大24時間以内の意識回収と再起動を目指しています。これまでの成功事例では、被験者の人格維持率は98.4%を記録しています。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Culture (Full Info Added) -->
+        <div id="tab-culture" class="tab-content">
+            <div class="container mx-auto px-6 py-20 max-w-5xl">
+                <div class="reveal text-center mb-24">
+                    <h2 class="font-orbitron text-4xl font-black mb-6 tracking-widest">CULTURE</h2>
+                    <p class="text-gray-500 uppercase tracking-[0.3em] text-[10px]">Life in the Node</p>
+                </div>
+
+                <div class="space-y-32">
+                    <section class="reveal flex flex-col md:flex-row gap-12 items-center">
+                        <div class="md:w-1/2">
+                            <h3 class="text-3xl font-bold mb-6">Work as Presence</h3>
+                            <p class="text-gray-400 leading-relaxed">
+                                ノードラボには固定された「オフィス」はありません。社員の意識は世界中に分散したノードに存在し、必要なときだけバーチャル空間でアセンブリ（集会）が行われます。私たちは「どこにいるか」ではなく「何を感じているか」を重視します。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 grid grid-cols-2 gap-4">
+                            <div class="h-40 glass-panel flex items-center justify-center text-[10px] uppercase tracking-widest text-blue-500 border border-blue-500/20">Remote Conscious</div>
+                            <div class="h-40 glass-panel flex items-center justify-center text-[10px] uppercase tracking-widest text-blue-500 border border-blue-500/20">Deep Flow</div>
+                        </div>
+                    </section>
+
+                    <section class="reveal flex flex-col md:flex-row-reverse gap-12 items-center">
+                        <div class="md:w-1/2">
+                            <h3 class="text-3xl font-bold mb-6">Post-Human Ethics</h3>
+                            <p class="text-gray-400 leading-relaxed">
+                                テクノロジーの進化は、常に倫理を置き去りにします。私たちは社内に哲学者と歴史家を常駐させ、「人間の定義」を常に問い直しています。デジタル生命体となったとき、私たちは何を愛し、何を信じるのか。その答えを探すのも仕事の一部です。
+                            </p>
+                        </div>
+                        <div class="md:w-1/2">
+                            <div class="p-8 glass-panel border-r-4 border-blue-500 font-mono text-xs text-blue-300">
+                                <div>// INTERNAL ETHICS CODE:</div>
+                                <div class="mt-4">01. 意識の自由意思を最優先する</div>
+                                <div>02. デジタル人格の搾取を禁ずる</div>
+                                <div>03. 物理世界の美しさを忘れない</div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- WebGL Neural Network Scene & Interactions ---
+        // --- WebGL Neural Network Scene ---
         let scene, camera, renderer, group, points, lines;
-        const particleCount = 250;
+        const particleCount = 280;
         let particlesData = [];
         let mouseX = 0, mouseY = 0;
         const cursorEffect = document.getElementById('cursor-effect');
@@ -509,203 +530,130 @@
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
             camera.position.z = 450;
-
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             document.body.appendChild(renderer.domElement);
-
             group = new THREE.Group();
             scene.add(group);
 
             const positions = new Float32Array(particleCount * 3);
             for (let i = 0; i < particleCount; i++) {
-                const x = (Math.random() - 0.5) * 1000;
-                const y = (Math.random() - 0.5) * 1000;
-                const z = (Math.random() - 0.5) * 1000;
-                positions[i * 3] = x;
-                positions[i * 3 + 1] = y;
-                positions[i * 3 + 2] = z;
-                
-                particlesData.push({
-                    velocity: new THREE.Vector3(-1 + Math.random() * 2, -1 + Math.random() * 2, -1 + Math.random() * 2),
-                    numConnections: 0
-                });
+                positions[i * 3] = (Math.random() - 0.5) * 1200;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 1200;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 1200;
+                particlesData.push({ velocity: new THREE.Vector3(-1 + Math.random() * 2, -1 + Math.random() * 2, -1 + Math.random() * 2).multiplyScalar(0.5) });
             }
-
             const geo = new THREE.BufferGeometry();
             geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const mat = new THREE.PointsMaterial({ 
-                color: 0x00aaff, 
-                size: 3, 
-                transparent: true, 
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending 
-            });
-            points = new THREE.Points(geo, mat);
+            points = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x00aaff, size: 2, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending }));
             group.add(points);
 
             const lGeo = new THREE.BufferGeometry();
-            const lMat = new THREE.LineBasicMaterial({ 
-                color: 0x00aaff, 
-                transparent: true, 
-                opacity: 0.2,
-                blending: THREE.AdditiveBlending
-            });
-            lines = new THREE.LineSegments(lGeo, lMat);
+            lines = new THREE.LineSegments(lGeo, new THREE.LineBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending }));
             group.add(lines);
 
-            // Interaction: Follow Mouse and Click Burst
             window.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX - window.innerWidth / 2);
-                mouseY = (e.clientY - window.innerHeight / 2);
-                
-                // UI Cursor Effect
-                cursorEffect.style.opacity = 1;
-                cursorEffect.style.left = e.clientX + 'px';
-                cursorEffect.style.top = e.clientY + 'px';
-            });
-
-            window.addEventListener('mousedown', (e) => {
-                // Click burst effect in WebGL
-                const vector = new THREE.Vector3(
-                    (e.clientX / window.innerWidth) * 2 - 1,
-                    -(e.clientY / window.innerHeight) * 2 + 1,
-                    0.5
-                );
-                vector.unproject(camera);
-                const dir = vector.sub(camera.position).normalize();
-                const distance = -camera.position.z / dir.z;
-                const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-
-                particlesData.forEach((pd, i) => {
-                    const pPos = new THREE.Vector3(
-                        positions[i * 3],
-                        positions[i * 3 + 1],
-                        positions[i * 3 + 2]
-                    );
-                    const dist = pPos.distanceTo(pos);
-                    if (dist < 200) {
-                        const push = pPos.sub(pos).normalize().multiplyScalar(15);
-                        pd.velocity.add(push);
-                    }
-                });
-
-                // UI Feedback
-                cursorEffect.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                setTimeout(() => cursorEffect.style.transform = 'translate(-50%, -50%) scale(1)', 150);
+                mouseX = (e.clientX - window.innerWidth / 2); mouseY = (e.clientY - window.innerHeight / 2);
+                cursorEffect.style.opacity = 0.8; cursorEffect.style.left = e.clientX + 'px'; cursorEffect.style.top = e.clientY + 'px';
             });
 
             const animate = () => {
                 requestAnimationFrame(animate);
-                
                 const posArr = points.geometry.attributes.position.array;
                 const lPos = [];
-                let vertexIndex = 0;
-
                 for (let i = 0; i < particleCount; i++) {
                     const pd = particlesData[i];
-                    
-                    // Basic motion
-                    posArr[i * 3] += pd.velocity.x;
-                    posArr[i * 3 + 1] += pd.velocity.y;
-                    posArr[i * 3 + 2] += pd.velocity.z;
-
-                    // Mouse attraction
-                    const pPos = new THREE.Vector3(posArr[i*3], posArr[i*3+1], posArr[i*3+2]);
-                    const mPos = new THREE.Vector3(mouseX, -mouseY, 0);
-                    if (pPos.distanceTo(mPos) < 300) {
-                        pd.velocity.add(mPos.sub(pPos).normalize().multiplyScalar(0.05));
-                    }
-
-                    // Bounds check
-                    if (posArr[i * 3] < -500 || posArr[i * 3] > 500) pd.velocity.x *= -1;
-                    if (posArr[i * 3 + 1] < -500 || posArr[i * 3 + 1] > 500) pd.velocity.y *= -1;
-                    if (posArr[i * 3 + 2] < -500 || posArr[i * 3 + 2] > 500) pd.velocity.z *= -1;
-
-                    // Friction
-                    pd.velocity.multiplyScalar(0.98);
-
-                    // Connection logic
+                    posArr[i * 3] += pd.velocity.x; posArr[i * 3 + 1] += pd.velocity.y; posArr[i * 3 + 2] += pd.velocity.z;
+                    if (Math.abs(posArr[i * 3]) > 600) pd.velocity.x *= -1;
+                    if (Math.abs(posArr[i * 3 + 1]) > 600) pd.velocity.y *= -1;
+                    if (Math.abs(posArr[i * 3 + 2]) > 600) pd.velocity.z *= -1;
                     for (let j = i + 1; j < particleCount; j++) {
-                        const dx = posArr[i * 3] - posArr[j * 3];
-                        const dy = posArr[i * 3 + 1] - posArr[j * 3 + 1];
-                        const dz = posArr[i * 3 + 2] - posArr[j * 3 + 2];
-                        const d = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                        
-                        if (d < 130) {
-                            lPos.push(posArr[i * 3], posArr[i * 3 + 1], posArr[i * 3 + 2]);
-                            lPos.push(posArr[j * 3], posArr[j * 3 + 1], posArr[j * 3 + 2]);
-                        }
+                        const d = Math.sqrt(Math.pow(posArr[i*3]-posArr[j*3],2)+Math.pow(posArr[i*3+1]-posArr[j*3+1],2)+Math.pow(posArr[i*3+2]-posArr[j*3+2],2));
+                        if (d < 110) { lPos.push(posArr[i*3], posArr[i*3+1], posArr[i*3+2], posArr[j*3], posArr[j*3+1], posArr[j*3+2]); }
                     }
                 }
-
                 points.geometry.attributes.position.needsUpdate = true;
                 lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(lPos, 3));
-                
-                group.rotation.y += 0.001;
+                group.rotation.y += 0.0005;
                 renderer.render(scene, camera);
             };
             animate();
         }
 
-        // --- History Logic ---
+        // --- Wave Chronicle Logic ---
         const historyData = [
-            { year: "2029", title: "Project: Genesis Mapping", desc: "世界初、非侵襲的量子スキャンにより生体脳の完全なシナプス結合パターンをデータ化することに成功。" },
-            { year: "2034", title: "Neural Sync Alpha", desc: "抽出された意識データと生体脳のリアルタイム同期を確立。被験者は二つの視点を同時に体験することとなった。" },
-            { year: "2041", title: "Identity Freedom Act", desc: "デジタル存在の法的権利が認められる。NODE LABは世界唯一の公認意識保管機関として選出された。" },
-            { year: "2048", title: "The Sovereign Network", desc: "物理サーバーを必要としない、量子もつれを利用した分散型レジャー上の意識保持システムが稼働。" },
-            { year: "2055", title: "Infinite Loop", desc: "肉体の寿命を迎えた後、意識がネットワーク上で完全に再起動。人類は初めて「死」をデータの再配置へと変えた。" }
+            { year: "2029", title: "Genesis Mapping", desc: "初の被験者における脳神経パターンの完全複製を確認。デジタル意識の第一歩を刻む。" },
+            { year: "2034", title: "Neuro-Sync Hub", desc: "クラウドベースの意識同期プラットフォームを開設。1,000名以上のテスターが参加。" },
+            { year: "2041", title: "Soul Protocol", desc: "法的地位の確立に伴い、デジタル化された個人の人格権を保護するレジャーを実装。" },
+            { year: "2048", title: "Infinite Network", desc: "ハードウェアに依存しない、量子もつれを利用した分散型意識保持ネットワークの稼働。" },
+            { year: "2055", title: "The Singularity", desc: "身体を喪失した後の再起動成功率が99.9%に到達。永続的な生存が選択可能に。" }
         ];
 
         const track = document.getElementById('history-track');
-        const mainLine = document.getElementById('main-timeline-line');
+        const wavePath = document.getElementById('wave-path');
         let scrollX = 0;
         let isDragging = false;
         let startX = 0;
         let activeIndex = -1;
-        const nodeSpacing = 450;
+        const nodeSpacing = 600;
+
+        function drawWave() {
+            const width = (historyData.length + 1) * nodeSpacing + window.innerWidth;
+            let d = `M 0 100`;
+            for (let x = 0; x <= width; x += 10) {
+                const y = 100 + Math.sin(x / 300) * 80;
+                d += ` L ${x} ${y}`;
+            }
+            wavePath.setAttribute('d', d);
+            track.style.width = width + 'px';
+        }
 
         function setupHistory() {
             track.innerHTML = '';
-            const centerOffset = window.innerWidth / 2;
-            const totalWidth = (historyData.length + 1) * nodeSpacing + window.innerWidth;
-            track.style.width = totalWidth + 'px';
-            mainLine.style.width = totalWidth + 'px';
+            drawWave();
 
             historyData.forEach((data, i) => {
-                const x = (i + 1) * nodeSpacing + (centerOffset - nodeSpacing);
-                const wrapper = document.createElement('div');
-                wrapper.className = 'history-node-wrapper';
-                wrapper.style.left = `${x - 150}px`;
-                wrapper.style.top = `0`;
-                wrapper.style.height = `100%`;
-                const isEven = i % 2 === 0;
-                wrapper.innerHTML = `
-                    <div class="node-vertical-line ${isEven ? 'up' : 'down'}"></div>
-                    <div class="flex flex-col items-center justify-center h-full">
-                        <div class="history-node" onclick="snapTo(${i})"></div>
-                        <div class="absolute font-orbitron text-blue-500 font-bold tracking-[0.2em] ${isEven ? '-top-10' : '-bottom-10'} transition-all hover:text-white">
-                            ${data.year}
-                        </div>
+                const x = (i + 1) * nodeSpacing;
+                const y = 100 + Math.sin(x / 300) * 80;
+                const group = document.createElement('div');
+                group.className = 'node-group';
+                group.id = `group-${i}`;
+                group.style.left = `${x}px`;
+                group.style.top = `50%`;
+                group.style.transform = `translate(-50%, -50%)`;
+                const isUp = Math.sin(x / 300) > 0;
+                group.innerHTML = `
+                    <div class="node-dot-container" style="top: ${y-100}px">
+                        <div class="history-node" id="node-${i}"></div>
+                    </div>
+                    <div class="node-content glass-panel" id="content-${i}" style="top: ${isUp ? (y - 100 + 40) : (y - 100 - 240)}px">
+                        <div class="font-orbitron text-blue-500 text-3xl font-black mb-2">${data.year}</div>
+                        <div class="text-sm font-bold text-white mb-3 tracking-widest uppercase border-b border-blue-500/30 pb-2">${data.title}</div>
+                        <p class="text-xs text-gray-400 leading-relaxed font-light">${data.desc}</p>
                     </div>
                 `;
-                track.appendChild(wrapper);
+                track.appendChild(group);
             });
+            updateHistory();
         }
 
         function snapTo(index) {
             const centerOffset = window.innerWidth / 2;
-            const targetPos = (index + 1) * nodeSpacing + (centerOffset - nodeSpacing);
+            const targetPos = (index + 1) * nodeSpacing;
             scrollX = -(targetPos - centerOffset);
-            const maxScroll = 0;
-            const minScroll = -(track.offsetWidth - window.innerWidth);
-            scrollX = Math.max(minScroll, Math.min(maxScroll, scrollX));
-            track.style.transition = 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
-            mainLine.style.transition = 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
-            track.style.transform = `translateX(${scrollX}px)`;
-            mainLine.style.transform = `translateX(${scrollX}px) translateY(-50%)`;
+            applyScroll();
             updateHistory(index);
+        }
+
+        function applyScroll() {
+            const limit = -(track.offsetWidth - window.innerWidth);
+            scrollX = Math.max(limit, Math.min(0, scrollX));
+            track.style.transition = isDragging ? 'none' : 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+            track.style.transform = `translateX(${scrollX}px)`;
+            const svg = document.getElementById('wave-svg');
+            svg.style.transition = isDragging ? 'none' : 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+            svg.style.transform = `translateY(-50%) translateX(${scrollX}px)`;
         }
 
         function updateHistory(forcedIdx) {
@@ -714,127 +662,89 @@
             if (idx === undefined) {
                 let minD = Infinity;
                 historyData.forEach((_, i) => {
-                    const nodeX = (i + 1) * nodeSpacing + (centerOffset - nodeSpacing);
-                    const d = Math.abs(nodeX - (-scrollX + centerOffset));
+                    const nodeX = (i + 1) * nodeSpacing + scrollX;
+                    const d = Math.abs(nodeX - centerOffset);
                     if(d < minD) { minD = d; idx = i; }
                 });
             }
             const safeIdx = Math.max(0, Math.min(historyData.length - 1, idx));
-            document.querySelectorAll('.history-node').forEach((n, i) => {
-                n.classList.toggle('active', i === safeIdx);
+            activeIndex = safeIdx;
+            historyData.forEach((_, i) => {
+                const group = document.getElementById(`group-${i}`);
+                const content = document.getElementById(`content-${i}`);
+                if (i === safeIdx) {
+                    group.classList.add('active'); content.classList.add('active');
+                } else {
+                    group.classList.remove('active'); content.classList.remove('active');
+                }
             });
-
-            if(safeIdx !== activeIndex) {
-                activeIndex = safeIdx;
-                const d = historyData[activeIndex];
-                const detail = document.getElementById('history-detail');
-                detail.style.opacity = 0;
-                detail.style.transform = 'translateY(15px) skewX(2deg)';
-                setTimeout(() => {
-                    document.getElementById('hist-year').innerText = d.year;
-                    document.getElementById('hist-title').innerText = d.title;
-                    document.getElementById('hist-desc').innerText = d.desc;
-                    detail.style.opacity = 1;
-                    detail.style.transform = 'translateY(0) skewX(0deg)';
-                }, 300);
-            }
         }
 
         const hViewport = document.getElementById('history-viewport');
-        hViewport.addEventListener('mousedown', (e) => { 
-            isDragging = true; 
-            startX = e.pageX - scrollX; 
-            track.style.transition = 'none'; 
-            mainLine.style.transition = 'none';
-        });
-        window.addEventListener('mouseup', () => { 
-            if(!isDragging) return; 
-            isDragging = false; 
-            snapTo(activeIndex); 
-        });
-        window.addEventListener('mousemove', (e) => { 
-            if(!isDragging) return; 
-            scrollX = e.pageX - startX; 
-            const maxScroll = 100;
-            const minScroll = -(track.offsetWidth - window.innerWidth + 100);
-            scrollX = Math.max(minScroll, Math.min(maxScroll, scrollX));
-            track.style.transform = `translateX(${scrollX}px)`; 
-            mainLine.style.transform = `translateX(${scrollX}px) translateY(-50%)`;
-            updateHistory();
-        });
+        hViewport.addEventListener('mousedown', (e) => { isDragging = true; startX = e.pageX - scrollX; });
+        window.addEventListener('mouseup', () => { if(!isDragging) return; isDragging = false; snapTo(activeIndex); });
+        window.addEventListener('mousemove', (e) => { if(!isDragging) return; scrollX = e.pageX - startX; applyScroll(); updateHistory(); });
+
         hViewport.addEventListener('wheel', (e) => {
             e.preventDefault();
-            scrollX -= e.deltaY * 2.0;
-            const maxScroll = 100;
-            const minScroll = -(track.offsetWidth - window.innerWidth + 100);
-            scrollX = Math.max(minScroll, Math.min(maxScroll, scrollX));
-            track.style.transition = 'none';
-            mainLine.style.transition = 'none';
-            track.style.transform = `translateX(${scrollX}px)`;
-            mainLine.style.transform = `translateX(${scrollX}px) translateY(-50%)`;
-            updateHistory();
+            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            scrollX -= delta * 1.5;
+            isDragging = true; applyScroll(); isDragging = false; updateHistory();
             clearTimeout(window.snapTimeout);
-            window.snapTimeout = setTimeout(() => snapTo(activeIndex), 150);
+            window.snapTimeout = setTimeout(() => snapTo(activeIndex), 250);
         }, { passive: false });
 
-        // --- Tab Switching ---
+        // --- Tab Management ---
         function switchTab(name) {
-            const currentTab = document.querySelector('.tab-content.active');
-            if(currentTab && currentTab.id === 'tab-'+name) return;
+            const current = document.querySelector('.tab-content.active');
+            if(current && current.id === 'tab-'+name) return;
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('nav-'+name).classList.add('active');
-            if(currentTab) {
-                currentTab.style.opacity = 0;
-                currentTab.style.transform = 'translateY(-15px) scale(0.98)';
+            if(current) {
+                current.style.opacity = 0;
+                current.style.transform = 'translateY(-10px)';
                 setTimeout(() => {
-                    currentTab.classList.remove('active');
-                    showNewTab(name);
+                    current.classList.remove('active');
+                    showTab(name);
                 }, 400);
             } else {
-                showNewTab(name);
+                showTab(name);
             }
         }
 
-        function showNewTab(name) {
-            const newTab = document.getElementById('tab-'+name);
-            newTab.classList.add('active');
+        function showTab(name) {
+            const next = document.getElementById('tab-'+name);
+            next.classList.add('active');
             setTimeout(() => {
-                newTab.style.opacity = 1;
-                newTab.style.transform = 'translateY(0) scale(1)';
-                if(name === 'history') {
-                    setupHistory();
-                    snapTo(0);
-                }
+                next.style.opacity = 1; next.style.transform = 'translateY(0)';
+                if(name === 'history') { setupHistory(); setTimeout(() => snapTo(0), 100); }
                 handleReveal();
             }, 50);
             document.getElementById('main-viewport').scrollTop = 0;
         }
 
         function handleReveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(el => {
+            document.querySelectorAll('.reveal').forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight - 50) el.classList.add('visible');
             });
         }
+
+        // Scroll listener for reveal
         document.getElementById('main-viewport').addEventListener('scroll', handleReveal);
 
         window.onload = () => {
             let p = 0;
             const int = setInterval(() => {
-                p += Math.random() * 8;
-                if(p > 100) p = 100;
+                p += Math.random() * 20; if(p > 100) p = 100;
                 document.getElementById('progress-bar').style.width = p + '%';
-                document.getElementById('loader-perc').innerText = `SYNCING TIMELINE: ${Math.floor(p)}%`;
+                document.getElementById('loader-perc').innerText = `INITIALIZING SYSTEM: ${Math.floor(p)}%`;
                 if(p >= 100) {
                     clearInterval(int);
                     document.getElementById('loader').style.opacity = 0;
-                    setTimeout(() => {
-                        document.getElementById('loader').style.display = 'none';
-                        switchTab('home');
-                    }, 1200);
+                    setTimeout(() => { document.getElementById('loader').style.display = 'none'; switchTab('home'); }, 1000);
                 }
-            }, 40);
+            }, 50);
             initWebGL();
         };
 
