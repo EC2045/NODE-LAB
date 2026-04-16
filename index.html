@@ -22,7 +22,7 @@
             font-family: 'Noto Sans JP', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            line-height: 2.0; /* テキスト主体のため行間を広めに設定 */
+            line-height: 2.0;
         }
 
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
@@ -114,7 +114,6 @@
             transform: translateY(0);
         }
 
-        /* 装飾を最小限に */
         .bg-grid {
             background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
             background-size: 40px 40px;
@@ -124,17 +123,27 @@
             pointer-events: none;
         }
 
-        /* コンテンツ要素 */
-        .card-minimal {
+        /* タイムライン装飾 */
+        .timeline-item {
+            position: relative;
             border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding-left: 30px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            transition: 0.5s;
+            padding-left: 40px;
+            padding-bottom: 60px;
         }
-        .card-minimal:hover {
-            border-left-color: var(--neon-blue);
-            background: rgba(255, 255, 255, 0.01);
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 10px;
+            width: 9px;
+            height: 9px;
+            background: #333;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+        .timeline-item:hover::before {
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
         }
 
         .reveal-text {
@@ -150,6 +159,17 @@
         .text-justified {
             text-align: justify;
             text-justify: inter-character;
+        }
+
+        .external-link {
+            color: var(--neon-blue);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: 0.3s;
+        }
+        .external-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px var(--neon-blue);
         }
 
         @media (max-width: 768px) {
@@ -184,7 +204,6 @@
     <section id="home" class="tab-section active">
         <div class="container mx-auto px-8 md:px-16">
             <div class="max-w-4xl mx-auto">
-                <!-- Hero -->
                 <div class="mb-40">
                     <div class="mb-10 reveal-text">
                         <span class="text-blue-400 text-[10px] font-orbitron tracking-[0.4em] uppercase">Executive Report: Neural Migration</span>
@@ -194,45 +213,8 @@
                     </h1>
                     <div class="max-w-2xl reveal-text">
                         <p class="text-gray-300 text-lg font-light leading-relaxed text-justified mb-8">
-                            私たちは「生命」を定義し直しています。ノードラボ株式会社は、ECD財団から供給される高純度の特異エネルギーを基盤とし、人類の意識、記憶、そして個性をデジタル領域へとシームレスに転送する技術を確立しました。
+                            私たちは「生命」を定義し直しています。ノードラボ株式会社は、<a href="https://shun240523-stack.github.io/ECO/" target="_blank" class="external-link">CED財団</a>から供給される高純度の特異エネルギーを基盤とし、人類の意識、記憶、そして個性をデジタル領域へとシームレスに転送する技術を確立しました。
                         </p>
-                        <p class="text-gray-500 text-sm leading-loose text-justified">
-                            情報が物理的制約から解放されるとき、人類はかつてない自由を手に入れます。それは単なるデータの保存ではなく、意識の永続的な運用を意味します。
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Abstract Sections (Replacing images with deep text) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mb-40">
-                    <div class="reveal-text">
-                        <div class="font-orbitron text-[10px] text-blue-500 mb-6 tracking-widest">SUB-SECTION A</div>
-                        <h3 class="text-xl font-bold mb-6">高次元演算コグニティブ・コア</h3>
-                        <p class="text-gray-500 text-sm leading-relaxed text-justified">
-                            ネオ東京に位置する第1演算センターでは、毎秒京単位のシナプス結合を模倣する「特異エネルギー駆動型ニューラルネットワーク」が稼働しています。この施設は、個人の意識をリアルタイムで同期し、物理的脳が活動を停止した後も、デジタル空間におけるアイデンティティを完璧に保証します。
-                        </p>
-                    </div>
-                    <div class="reveal-text">
-                        <div class="font-orbitron text-[10px] text-blue-500 mb-6 tracking-widest">SUB-SECTION B</div>
-                        <h3 class="text-xl font-bold mb-6">量子符号化による魂の抽出</h3>
-                        <p class="text-gray-500 text-sm leading-relaxed text-justified">
-                            私たちのマッピング技術は、従来のMRIや脳波測定とは一線を画します。ECDエネルギーによって誘起される量子もつれを利用し、個人の深層心理や直感的な反応、言語化不可能な「クオリア」さえも正確にデジタル記述子へと変換します。これは人類の感性の完全保存を目的としています。
-                        </p>
-                    </div>
-                </div>
-
-                <!-- ECD Partnership (Text Emphasis) -->
-                <div class="py-32 border-t border-white/5">
-                    <div class="max-w-3xl reveal-text">
-                        <h2 class="text-3xl font-bold mb-10 leading-snug">
-                            <span class="text-cyan-400 font-orbitron">ECD Foundation</span> との戦略的連環
-                        </h2>
-                        <p class="text-gray-400 text-base leading-relaxed text-justified mb-10">
-                            ECD財団が提供する「特異エネルギー」は、我々のプロジェクトに欠かせない唯一の動力源です。彼らが物理学の極限状態で発見したこのエネルギーは、情報の劣化を最小限に抑えつつ、無限の並列演算を可能にします。この提携は、単なるビジネス関係を超えた、人類の進化に対する共同宣誓です。
-                        </p>
-                        <div class="flex items-center gap-10">
-                            <div class="h-[1px] flex-1 bg-gradient-to-r from-cyan-400/50 to-transparent"></div>
-                            <span class="font-orbitron text-[10px] tracking-widest text-cyan-400">AUTHORIZED INFRASTRUCTURE</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -250,13 +232,7 @@
                 <div class="reveal-text">
                     <h3 class="text-2xl font-bold mb-8">肉体という制約からの脱却</h3>
                     <p class="text-gray-400 text-lg leading-relaxed text-justified">
-                        人類の歴史は、常に肉体の脆弱性との戦いでした。老化、疾病、そして死。これらはすべて、ハードウェアである肉体の限界に起因します。ノードラボのビジョンは、意識というソフトウェアを肉体から切り離し、クラウド上に構築された「永遠のアーキテクチャ」へと移行させることにあります。私たちは死を、単なるOSのアップグレードへと再定義します。
-                    </p>
-                </div>
-                <div class="reveal-text">
-                    <h3 class="text-2xl font-bold mb-8">普遍的知性の集積体</h3>
-                    <p class="text-gray-400 text-lg leading-relaxed text-justified">
-                        個々の意識がデジタル化され、ネットワークで相互接続されるとき、人類は個を保ちながらも一つの巨大な知性体としての側面を持ち始めます。これは個性の喪失ではなく、他者との究極の理解と、過去の叡智との直接的な結合を意味します。ECD財団のクリーンエネルギーが地球環境を救うように、私たちの技術は人類の精神的枯渇を救います。
+                        人類の歴史は、常に肉体の脆弱性との戦いでした。ノードラボのビジョンは、意識というソフトウェアを肉体から切り離し、永遠のアーキテクチャへと移行させることにあります。私たちは死を、単なるOSのアップグレードへと再定義します。
                     </p>
                 </div>
             </div>
@@ -268,24 +244,51 @@
         <div class="container mx-auto px-8 max-w-4xl">
             <div class="mb-24 reveal-text">
                 <h2 class="font-orbitron text-4xl font-black mb-10 tracking-[0.2em]">HISTORY</h2>
+                <p class="text-gray-500 text-xs tracking-widest uppercase">Chronicle of Human Evolution</p>
             </div>
-            <div class="space-y-20 border-l border-white/5 pl-10">
-                <div class="reveal-text">
-                    <div class="font-orbitron text-blue-500 text-xl font-bold mb-4">2032 : INCEPTION</div>
+            
+            <div class="space-y-4">
+                <!-- 2032 -->
+                <div class="timeline-item reveal-text">
+                    <div class="flex items-baseline gap-4 mb-4">
+                        <span class="font-orbitron text-blue-500 text-2xl font-bold">2032</span>
+                        <h3 class="text-xl font-bold">Node-lab 正式設立</h3>
+                    </div>
                     <p class="text-gray-400 leading-relaxed text-justified">
-                        東京都渋谷区の地下深度150mに位置するセクター7Gにて、実験的な神経科学ユニットとして設立。最初の理論体系「意識の流動性に関する第一定義」を起草。
+                        東京都渋谷区セクター7Gにて法人化。人類の「データ化」を生存戦略として全世界に提示。この急進的進化を恐れる一部の保守勢力は、後に<a href="https://rits1019c1.github.io/BIB/" target="_blank" class="external-link">BIB</a>を組織し、物理的死の回避を「欺瞞」と呼んで妨害を開始する。
                     </p>
                 </div>
-                <div class="reveal-text">
-                    <div class="font-orbitron text-cyan-400 text-xl font-bold mb-4">2038 : ENERGY SYNERGY</div>
+
+                <!-- 2039 -->
+                <div class="timeline-item reveal-text">
+                    <div class="flex items-baseline gap-4 mb-4">
+                        <span class="font-orbitron text-blue-500 text-2xl font-bold">2039</span>
+                        <h3 class="text-xl font-bold">反・マイグレーション声明への回答</h3>
+                    </div>
                     <p class="text-gray-400 leading-relaxed text-justified">
-                        ECD財団による「特異エネルギー」の商用利用第一号として選定。これにより、従来100年を要すると言われた脳マッピングの計算時間を数分に短縮することに成功。
+                        敵対組織<a href="https://rits1019c1.github.io/BIB/" target="_blank" class="external-link">BIB</a>により、肉体的クオリアの不可逆性を訴える基礎理論が完成。ノードラボはこれに対し、デジタル空間におけるクオリアの完全な再現性を実証することで、旧時代的な理論の不完全さを証明した。
                     </p>
                 </div>
-                <div class="reveal-text">
-                    <div class="font-orbitron text-white text-xl font-bold mb-4">2044 : THE MIGRATION</div>
+
+                <!-- 2045 -->
+                <div class="timeline-item reveal-text">
+                    <div class="flex items-baseline gap-4 mb-4">
+                        <span class="font-orbitron text-blue-500 text-2xl font-bold">2045</span>
+                        <h3 class="text-xl font-bold">「同一アート作家 R」との共鳴と統合</h3>
+                    </div>
                     <p class="text-gray-400 leading-relaxed text-justified">
-                        人類史上初となる「完全意識移行試験」を完遂。被験者Aの意識はデジタル空間内で、物理世界と同様、あるいはそれ以上の解像度で活動を継続している。
+                        反対勢力がデジタルへの逃避に対抗する「最後の座標」として保管してきた<a href="https://rits1019c1.github.io/artr/" target="_blank" class="external-link">作家 R</a>氏の記号哲学。我々はその「座標」を解析し、デジタル・アイデンティティの認証コアとして統合することに成功。これにより、記号は物理的保存を超え、永遠の「動的資産」へと進化した。　
+                    </p>
+                </div>
+
+                <!-- Future -->
+                <div class="timeline-item reveal-text">
+                    <div class="flex items-baseline gap-4 mb-4">
+                        <span class="font-orbitron text-cyan-400 text-2xl font-bold">NEXT</span>
+                        <h3 class="text-xl font-bold">ポスト・ヒューマン・エラへ</h3>
+                    </div>
+                    <p class="text-gray-500 italic leading-relaxed text-justified">
+                        肉体というノイズを脱ぎ捨てた純粋知性が、新たな宇宙の理を書き換える。
                     </p>
                 </div>
             </div>
@@ -299,28 +302,16 @@
                 <h2 class="font-orbitron text-4xl font-black mb-6 tracking-[0.2em]">TECHNOLOGY</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="card-minimal reveal-text">
+                <div class="card-minimal border-l border-white/10 pl-8 reveal-text">
                     <h4 class="text-lg font-bold mb-6 text-blue-400">シナプス解析デコーダー</h4>
                     <p class="text-gray-500 text-sm leading-loose text-justified">
-                        脳内にある1000億のニューロンとそれらを結ぶ数兆のシナプスを、ECDパルスを用いて非侵襲的にスキャンします。感情の揺らぎや微細な記憶の断片までも、量子ビットの羅列として再構成する核心的技術です。
+                        脳内のニューロン結合をECDパルスでスキャン。<a href="https://rits1019c1.github.io/BIB/" target="_blank" class="external-link">BIB</a>が守ろうとする肉体感性さえも、量子ビットとして再現する核心的技術です。
                     </p>
                 </div>
-                <div class="card-minimal reveal-text">
-                    <h4 class="text-lg font-bold mb-6 text-cyan-400">特異点演算サーバー・メッシュ</h4>
+                <div class="card-minimal border-l border-white/10 pl-8 reveal-text">
+                    <h4 class="text-lg font-bold mb-6 text-cyan-400">特異点演算サーバー</h4>
                     <p class="text-gray-500 text-sm leading-loose text-justified">
-                        意識を維持するための演算リソースは、世界中に分散配置されたメッシュ状のサーバー群によって提供されます。一つのノードが停止しても、意識の連続性はECDネットワーク全体で保護されます。
-                    </p>
-                </div>
-                <div class="card-minimal reveal-text">
-                    <h4 class="text-lg font-bold mb-6 text-pink-500">感覚再構築プロトコル</h4>
-                    <p class="text-gray-500 text-sm leading-loose text-justified">
-                        デジタル空間において「五感」をエミュレートするアルゴリズム。風の冷たさや光の眩しさといった物理的感覚を、デジタル信号を介して意識へと直接フィードバックします。
-                    </p>
-                </div>
-                <div class="card-minimal reveal-text">
-                    <h4 class="text-lg font-bold mb-6 text-white">エシカル・ガードレールAI</h4>
-                    <p class="text-gray-500 text-sm leading-loose text-justified">
-                        移行された意識が不正な書き換えや消去から守られるよう、自律型のセキュリティAIが24時間監視。デジタル存在としての「人権」をコードレベルで定義・保護します。
+                        <a href="https://shun240523-stack.github.io/ECO/" target="_blank" class="external-link">CEDユニット</a>から供給される安定エネルギーを用いた演算サーバー。
                     </p>
                 </div>
             </div>
@@ -334,17 +325,10 @@
                 <h2 class="font-orbitron text-4xl font-black mb-10 tracking-[0.2em]">CULTURE</h2>
             </div>
             <div class="reveal-text mb-20">
-                <h3 class="text-2xl font-bold mb-8">「存在」への問いを歓迎する組織</h3>
+                <h3 class="text-2xl font-bold mb-8">「存在」の再定義</h3>
                 <p class="text-gray-400 text-lg leading-relaxed text-justified">
-                    ノードラボでは、社員の半数がすでに物理的肉体を離れた「デジタル・アーカイブ」です。会議室には生身の人間と、ディスプレイ越しに参加するデジタル意識が同等に存在します。私たちは「そこに誰がいるか」ではなく「どのような意志がそこにあるか」を重視します。
+                    ノードラボでは、多くの社員がすでに物理的肉体を離れた「デジタル・アーカイブ」です。私たちは「<a href="https://rits1019c1.github.io/artr/" target="_blank" class="external-link">記号としての自己</a>」を尊重し、肉体の有無という区別を捨てました。
                 </p>
-            </div>
-            <div class="p-12 border border-white/5 bg-white/5 reveal-text">
-                <div class="font-orbitron text-xs text-blue-500 mb-6 tracking-widest">INTERNAL ETHICS</div>
-                <blockquote class="text-3xl font-light italic text-white leading-relaxed mb-8">
-                    "We do not build machines. We build the future vessels of human spirit."
-                </blockquote>
-                <p class="text-gray-500 text-sm">— Founding Principles, Article 1</p>
             </div>
         </div>
     </section>
@@ -352,6 +336,11 @@
     <footer class="py-20 border-t border-white/5 mt-20">
         <div class="container mx-auto px-8 text-center">
             <div class="font-orbitron text-xl font-black mb-8 tracking-[0.4em]">NODE <span class="text-blue-500">LAB</span></div>
+            <div class="flex flex-wrap justify-center gap-6 mb-12">
+                <a href="https://rits1019c1.github.io/BIB/" target="_blank" class="text-[10px] text-gray-600 hover:text-red-500 transition-colors tracking-widest uppercase">Related: BIB Architecture</a>
+                <a href="https://rits1019c1.github.io/artr/" target="_blank" class="text-[10px] text-gray-600 hover:text-white transition-colors tracking-widest uppercase">Research: Semiotic Philosophy (R-Art)</a>
+                <a href="https://shun240523-stack.github.io/ECO/" target="_blank" class="text-[10px] text-gray-600 hover:text-cyan-500 transition-colors tracking-widest uppercase">Resource: ECD/CED Infrastructure</a>
+            </div>
             <div class="text-[9px] text-gray-700 tracking-[0.4em] mb-4 uppercase">Advanced Consciousness Infrastructure / Tokyo Sector 7G</div>
             <div class="text-[9px] text-gray-800 tracking-tighter">
                 &copy; 2045 NODE LAB INC. ALL RIGHTS RESERVED. POWERED BY ECD FOUNDATION ENERGY SOURCE.
