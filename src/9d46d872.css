@@ -16,7 +16,7 @@
             margin: 0;
             background-color: var(--bg-dark);
             color: #ffffff;
-    font-family: '2045alphabet', 'Noto Sans JP', sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             line-height: 2.0;
@@ -203,3 +203,4 @@
                 letter-spacing: 0.15em;
             }
         }
+
